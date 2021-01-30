@@ -2,22 +2,26 @@
 #include <linux/types.h>
 #include <linux/sched.h>
 #include <linux/list.h>
+#include <linux/string.h>
 #include <linux/kernel.h>
 #include <asm/current.h>
 
 int __init mojule_init(void){
-  struct task_struct *head = current;
-  struct list_head sibl = current->sibling;
-  // struct task_struct *t;
+  // struct task_struct *head = current;
+  // struct list_head sibl = current->sibling;
+  struct task_struct *t;
 
   printk("Module insterted\n");
 
-  list_for_each_entry(head, &sibl, sibling){
-    printk("%s[%d]\n", head->comm, head->pid);
-  }
-  // list_for_each(p, head){ 
-
+  // list_for_each_entry(head, &sibl, sibling){
+  //   printk("%s[%d]\n", head->comm, head->pid);
   // }
+  // list_for_each(p, head){ }
+
+  for (t = current; strcmp(t->comm, "systemd") != 0; t = t->parent){
+    printk("%s[%d]\n", t->comm, t->pid);
+  }
+
 
   return 0;
 }
