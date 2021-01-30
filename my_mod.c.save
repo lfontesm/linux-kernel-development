@@ -1,0 +1,23 @@
+#include <linux/module.h>	// required for module related stuff
+#include <linux/sched.h>
+#include <linux/current.h>
+ 
+int __init mojule_init(void){
+  printk("Module inserted \n");
+  struct task_struct *task; = current;
+  struct list_head head = current->tasks;
+  struct list_head iter = current->tasks;
+  list_for_each(iter, head) {
+    struct task_struct *_iter=(struct task_struct *)iter;
+    printk(%s[%d]\n, _iter->comm, _iter->pid);
+  }
+
+  return 0;
+}
+ 
+void __exit mojule_deinit(void){
+  printk("Module removed \n");
+}
+ 
+module_init(mojule_init);
+module_exit(mojule_deinit);
